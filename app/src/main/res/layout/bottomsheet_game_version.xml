@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
+    android:id="@+id/bottomSheetVersionContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottomsheet_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_banner_layout"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/banner_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <FrameLayout
+                        android:id="@+id/fl_adplaceholder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_current_version_TV">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/kr_RDIO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                android:text="PUB (KOREA)"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:theme="@style/Custom_GFX_RadioButton"
+                app:layout_constraintBottom_toBottomOf="@+id/global_RDIO"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/global_RDIO"
+                app:layout_constraintTop_toTopOf="@+id/global_RDIO" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/tw_RDIO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PUB (TAIWAN)"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:theme="@style/Custom_GFX_RadioButton"
+                app:layout_constraintEnd_toStartOf="@+id/vn_RDIO"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bgmi_RDIO" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/vn_RDIO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="PUB (VIETNAM)"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:theme="@style/Custom_GFX_RadioButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tw_RDIO"
+                app:layout_constraintTop_toBottomOf="@+id/kr_RDIO" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/global_RDIO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="PUB GLOBAL"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:theme="@style/Custom_GFX_RadioButton"
+                app:layout_constraintBottom_toBottomOf="@+id/bgmi_RDIO"
+                app:layout_constraintEnd_toStartOf="@+id/kr_RDIO"
+                app:layout_constraintStart_toEndOf="@+id/bgmi_RDIO"
+                app:layout_constraintTop_toTopOf="@+id/bgmi_RDIO" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/bgmi_RDIO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:text="BGM (INDIA)"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@+id/global_RDIO"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView67"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Select Version"
+            android:textColor="@color/font"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/game_current_version_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/transparent_outline_background"
+            android:backgroundTint="@color/black"
+            android:drawableStart="@drawable/ic_done"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/white"
+            android:padding="5dp"
+            android:text="Now Supports BGMI/PUBG"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textView67"
+            app:layout_constraintStart_toStartOf="@+id/textView67"
+            app:layout_constraintTop_toBottomOf="@+id/textView67" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

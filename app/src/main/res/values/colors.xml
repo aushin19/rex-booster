@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <color name="primary">#FF9800</color>
+    <color name="primary_ripple">#42FF9800</color>
+    
+    <color name="font">#808080</color>
+
+    <color name="background">#f1f3f7</color>
+
+    <color name="nav_unselected">#909090</color>
+    <color name="nav_selected">#FF9800</color>
+
+    <color name="card_background">#FFF</color>
+    <color name="rear_card_background">#E4E4E4</color>
+
+    <color name="progressbar_background">#FF9800</color>
+    <color name="progressbar_progress">#FFD699</color>
+
+    <color name="premium">#000</color>
+
+    <color name="shimmer">#d6d8da</color>
+</resources>

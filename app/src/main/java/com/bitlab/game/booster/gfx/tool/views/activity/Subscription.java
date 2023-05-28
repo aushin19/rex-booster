@@ -1,6 +1,8 @@
 package com.bitlab.game.booster.gfx.tool.views.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ public class Subscription extends AppCompatActivity implements IAPBilling.Billin
         initComponents();
 
         initBilling();
+        //initClickListeners();
     }
 
     private void initBilling(){
@@ -54,7 +57,6 @@ public class Subscription extends AppCompatActivity implements IAPBilling.Billin
     }
 
     private void initComponents() {
-
         oneMonthCard = findViewById(R.id.one_month);
         threeMonthsCard = findViewById(R.id.three_month);
         oneYearCard = findViewById(R.id.one_year);
@@ -70,7 +72,21 @@ public class Subscription extends AppCompatActivity implements IAPBilling.Billin
         //        One Year Card Details
         oneYearPayment = findViewById(R.id.one_year_payment);
         one_year_cost_per_month = findViewById(R.id.one_year_cost_per_month);
+    }
 
+    @Override
+    public void displayErrorMessage(String message) {
+        if (message.equals("done")) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                public void run() {
+                    initClickListeners();
+                }
+            });
+        } else if (message.equals("error")) {
+            Toast.makeText(Subscription.this, "Error getting billing services", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(Subscription.this, "Error getting billing services", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initClickListeners() {
@@ -98,31 +114,24 @@ public class Subscription extends AppCompatActivity implements IAPBilling.Billin
     }
 
     @Override
-    public void displayErrorMessage(String message) {
-        if (message.equals("done")) {
-            initClickListeners();
-        } else if (message.equals("error")) {
-            Toast.makeText(Subscription.this, "Error getting billing services", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(Subscription.this, "Error getting billing services", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     public void subscriptionsDetailList(List<SkuDetails> skuDetailsList) {
-        try{
-            oneMonthPayment.setText("Total Price " + skuDetailsList.get(0).getPrice());
-            one_month_cost_per_month.setText(convertToSimplePrice(skuDetailsList.get(0).getPrice()));
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                try{
+                    oneMonthPayment.setText("Total Price " + skuDetailsList.get(0).getPrice());
+                    one_month_cost_per_month.setText(convertToSimplePrice(skuDetailsList.get(0).getPrice()));
 
-            threeMonthsPayment.setText("Total Price " + skuDetailsList.get(2).getPrice());
-            three_month_cost_per_month.setText(DecimalFormat((convertToInt(skuDetailsList.get(2).getOriginalPriceAmountMicros()) / 3.00)));
+                    threeMonthsPayment.setText("Total Price " + skuDetailsList.get(2).getPrice());
+                    three_month_cost_per_month.setText(DecimalFormat((convertToInt(skuDetailsList.get(2).getOriginalPriceAmountMicros()) / 3.00)));
 
-            oneYearPayment.setText("Total Price " + skuDetailsList.get(1).getPrice());
-            one_year_cost_per_month.setText(DecimalFormat((convertToInt(skuDetailsList.get(1).getOriginalPriceAmountMicros()) / 12.00)));
-        }catch (Exception e){
-            waitingDialog.dismiss();
-        }
-        waitingDialog.dismiss();
+                    oneYearPayment.setText("Total Price " + skuDetailsList.get(1).getPrice());
+                    one_year_cost_per_month.setText(DecimalFormat((convertToInt(skuDetailsList.get(1).getOriginalPriceAmountMicros()) / 12.00)));
+                }catch (Exception e){
+                    waitingDialog.dismiss();
+                }
+                waitingDialog.dismiss();
+            }
+        });
     }
 
     private String convertToSimplePrice(String price){

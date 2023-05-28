@@ -101,7 +101,6 @@ public class IAPBilling implements PurchasesUpdatedListener, BillingClientStateL
                 billingClient.querySkuDetailsAsync(subscriptionParams.build(), new SkuDetailsResponseListener() {
                     @Override
                     public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> list) {
-
                         //subscription list
                         skuListFromStore = list;
                         isListGot = true;

@@ -1,10 +1,11 @@
 package com.bitlab.game.booster.gfx.tool.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.bitlab.game.booster.gfx.tool.BuildConfig;
 import com.bitlab.game.booster.gfx.tool.model.AppInfo;
@@ -53,8 +54,7 @@ public class GetUserAppList extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
 
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 AddApps.createRecyclerView(appList);
             }

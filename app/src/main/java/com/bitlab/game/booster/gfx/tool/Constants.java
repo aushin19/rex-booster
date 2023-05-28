@@ -17,4 +17,8 @@ public class Constants {
     public final static String KR = "com.pubg.krmobile";
     public final static String TW = "com.rekoo.pubgm";
     public final static String VN = "com.vng.pubgmobile";
+
+    public final static String DOWNLOAD_PATH = "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/";
+    public final static String BACKUP_PATH = "Backup/";
+    public final static String SERVICE_FILES_PATH = "Files/";
 }

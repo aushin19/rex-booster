@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588126324555",
+    "project_id": "rexbooster-df272",
+    "storage_bucket": "rexbooster-df272.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588126324555:android:a1ff821f40c4f6ea7c8ace",
+        "android_client_info": {
+          "package_name": "com.bitlab.game.booster.gfx.tool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrsUvsuwCVXHGccwj4EtITVn0QJMj_1tw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

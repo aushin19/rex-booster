@@ -1,11 +1,11 @@
 package com.bitlab.game.booster.gfx.tool.views.fragment;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +106,7 @@ public class Dashboard extends Fragment implements CPUUsageMonitor.CPUUsageListe
                     appInfoArrayList.removeIf(n -> (n.packageName.equals(appInfo.packageName)));
             }
             BoosterApps.setBoosterApps(context, appInfoArrayList);
+
             TransitionManager.beginDelayedTransition(binding.mainLayout, new MaterialSharedAxis(MaterialSharedAxis.Y, true));
             boosterAppsAdapter = new BoosterAppsAdapter(context, appInfoArrayList);
             binding.boostAppRecyclerView.setItemViewCacheSize(appInfoArrayList.size());
@@ -126,8 +127,7 @@ public class Dashboard extends Fragment implements CPUUsageMonitor.CPUUsageListe
     }
 
     private void updateInfo() {
-        ((Activity) context).runOnUiThread(new Runnable() {
-            @Override
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 updateRamUsage();
                 getCpuTemperature();
@@ -194,8 +194,7 @@ public class Dashboard extends Fragment implements CPUUsageMonitor.CPUUsageListe
 
     @Override
     public void onCPUUsageUpdated(double cpuUsage) {
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 //cpuUsageTextView.setText(String.format("%.2f%%", cpuUsage));
                 Log.d("shivam", String.format("%.2f%%", cpuUsage));

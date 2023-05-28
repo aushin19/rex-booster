@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bitlab.game.booster.gfx.tool.AppConfig;
-import com.bitlab.game.booster.gfx.tool.BuildConfig;
 import com.bitlab.game.booster.gfx.tool.Constants;
 import com.bitlab.game.booster.gfx.tool.DocHandling.PermissionHandling;
 import com.bitlab.game.booster.gfx.tool.R;
@@ -73,10 +71,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         binding.fileExtension.setText(("." + filesFeedModal.extension).toUpperCase());
         binding.gameCompatible.setText(filesFeedModal.gameVersion);
 
-        /*if(isExists(filesFeedModal.title))
-            binding.imageButton.setBackground(context.getDrawable(R.drawable.ic_on_switch));*/
 
-        binding.imageButton.setOnClickListener(new View.OnClickListener() {
+        if (!filesFeedModal.backupLink.equals("null")) {
+            if (!isBackupFileExists(filesFeedModal.title)) {
+                binding.additionRequirements.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        binding.applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!Constants.GAME_PACKAGE_NAME.equals("none")) {
@@ -107,26 +110,43 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         return filesFeedModalArrayList.size();
     }
 
-    public static class FeedViewHolder extends RecyclerView.ViewHolder {
+    public class FeedViewHolder extends RecyclerView.ViewHolder {
         public FeedViewHolder(@NonNull GfxFilesListBinding filesListBinding) {
             super(filesListBinding.getRoot());
         }
     }
 
     private void buttonAction(View v, FilesFeedModal filesFeedModal, int pos, FeedAdapter.FeedViewHolder holder) {
-        if (!AppConfig.isUserPaid) { //Check for Premium Users
-            if (isExists(filesFeedModal.title)) { //Check if required file exists
-                if (buttonState) {
-                    selectedFilesModalArrayList.removeIf(n -> (n.Title.equals(filesFeedModal.title)));
-                    v.setBackground(context.getDrawable(R.drawable.ic_off_switch));
-                    buttonState = false;
+        if (AppConfig.isUserPaid) {
+            if (isServiceFileExists(filesFeedModal.title)) {
+                if (!filesFeedModal.backupLink.equals("null")) {
+                    if (isBackupFileExists(filesFeedModal.title)) {
+                        if (buttonState) {
+                            selectedFilesModalArrayList.removeIf(n -> (n.Title.equals(filesFeedModal.title)));
+                            v.setBackground(context.getDrawable(R.drawable.ic_off_switch));
+                            buttonState = false;
+                        } else {
+                            selectedFilesModalArrayList.add(new SelectedFilesModal(filesFeedModal.fileName, filesFeedModal.title, true, binding));
+                            v.setBackground(context.getDrawable(R.drawable.ic_on_switch));
+                            buttonState = true;
+                        }
+                    } else {
+                        downloadFile(filesFeedModal, pos, true);
+                    }
                 } else {
-                    selectedFilesModalArrayList.add(new SelectedFilesModal(filesFeedModal.fileName, filesFeedModal.title, holder));
-                    v.setBackground(context.getDrawable(R.drawable.ic_on_switch));
-                    buttonState = true;
+                    if (buttonState) {
+                        selectedFilesModalArrayList.removeIf(n -> (n.Title.equals(filesFeedModal.title)));
+                        v.setBackground(context.getDrawable(R.drawable.ic_off_switch));
+                        buttonState = false;
+                    } else {
+                        selectedFilesModalArrayList.add(new SelectedFilesModal(filesFeedModal.fileName, filesFeedModal.title, false, binding));
+                        v.setBackground(context.getDrawable(R.drawable.ic_on_switch));
+                        buttonState = true;
+                    }
                 }
+
             } else {
-                downloadFile(filesFeedModal, pos);
+                downloadFile(filesFeedModal, pos, false);
             }
         } else {
             context.startActivity(new Intent(context, Subscription.class));
@@ -134,16 +154,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         }
     }
 
-    private void downloadFile(FilesFeedModal filesFeedModal, int pos){
-        if(CheckInternetConnection.isNetworkConnected(context)){
-            AskDownloadBottomsheet.Show(context, filesFeedModal, pos);
-        }else{
+    private void downloadFile(FilesFeedModal filesFeedModal, int pos, boolean isBackup) {
+        if (CheckInternetConnection.isNetworkConnected(context)) {
+            AskDownloadBottomsheet.Show(context, filesFeedModal, pos, isBackup);
+        } else {
             Toast.makeText(context, "No Internet", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean isExists(String fileName) {
-        File file = new File(Environment.getExternalStorageDirectory(), "/Android/data/" + BuildConfig.APPLICATION_ID + "/files/system/" + fileName);
+    private boolean isServiceFileExists(String fileName) {
+        File file = new File(Constants.DOWNLOAD_PATH + Constants.SERVICE_FILES_PATH + fileName);
+        return file.exists();
+    }
+
+    private boolean isBackupFileExists(String fileName) {
+        File file = new File(Constants.DOWNLOAD_PATH + Constants.BACKUP_PATH + fileName);
         return file.exists();
     }
 

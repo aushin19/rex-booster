@@ -4,6 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".views.activity.SplashActivity">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/splash_shimmer"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:shimmer_base_alpha="1"
+        app:shimmer_duration="2000"
+        app:shimmer_highlight_alpha="0.6"
+        app:shimmer_highlight_color="@color/shimmer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/splash_app_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_icon"
+            android:backgroundTint="@color/primary_ripple"
+            android:gravity="center" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

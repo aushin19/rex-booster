@@ -31,8 +31,9 @@ public class SplashActivity extends AppCompatActivity implements IAPBilling.Bill
 
     @Override
     public void displayErrorMessage(String message) {
-        if(message.equalsIgnoreCase("done"))
+        if(message.equalsIgnoreCase("done")){
             iapBilling.isSubscribedToSubscriptionItem(this);
+        }
         else{
             AppConfig.isUserPaid = false;
             startActivity(new Intent(SplashActivity.this, ControllerActivity.class));

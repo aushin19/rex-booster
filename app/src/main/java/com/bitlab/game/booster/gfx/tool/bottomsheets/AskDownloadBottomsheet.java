@@ -15,14 +15,24 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class AskDownloadBottomsheet {
     public static BottomSheetDialog dialog;
     public static BottomsheetAskDownloadBinding binding;
+    static String link;
 
-    public static void Show(Context context, FilesFeedModal filesFeedModal, int pos) {
+    public static void Show(Context context, FilesFeedModal filesFeedModal, int pos, boolean isBackup) {
+
         dialog = new BottomSheetDialog(context, R.style.BottomSheetTheme);
 
         dialog.setCancelable(false);
         dialog.setDismissWithAnimation(true);
         binding = BottomsheetAskDownloadBinding.inflate(LayoutInflater.from(context));
         dialog.setContentView(binding.getRoot());
+
+        if(isBackup){
+            link = filesFeedModal.backupLink;
+            binding.titleText.setText("Additional Resources");
+        }
+        else{
+            link = filesFeedModal.link;
+        }
 
         binding.downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,10 +44,12 @@ public class AskDownloadBottomsheet {
                 binding.closeButton.setVisibility(View.INVISIBLE);
                 binding.progressBar2.setVisibility(View.VISIBLE);
                 binding.titleText.setText("0%");
-                new DownloadFiles(filesFeedModal.link,
+
+                new DownloadFiles(link,
                         filesFeedModal.title,
                         context,
-                        pos
+                        pos,
+                        isBackup
                 ).execute(filesFeedModal.title);
             }
         });
@@ -52,7 +64,7 @@ public class AskDownloadBottomsheet {
         dialog.show();
     }
 
-    private static void dismiss() {
+    public static void dismiss() {
         if (dialog.isShowing())
             dialog.dismiss();
     }

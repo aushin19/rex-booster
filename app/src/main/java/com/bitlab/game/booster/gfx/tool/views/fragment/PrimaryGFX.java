@@ -4,10 +4,11 @@ import static android.content.Context.MODE_PRIVATE;
 import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,12 +197,13 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
     private void applyFiles() {
         if (!SecondaryGFX.binding.secondaryApplyButton.getText().equals("CLEAR DATA")) {
             if (binding.primaryApplyButton.getText().equals("APPLY SETTINGS")) {
-                ((Activity) context).runOnUiThread(new Runnable() {
-                    @Override
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     public void run() {
                         waitingDialog.show();
                     }
                 });
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -215,8 +217,7 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
                             FileHandling.RenameFolderPrimary(context);
                         }
 
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
                             public void run() {
                                 waitingDialog.dismiss();
                                 if (SDK_INT < 33) {

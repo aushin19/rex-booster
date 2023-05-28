@@ -1,9 +1,11 @@
 package com.bitlab.game.booster.gfx.tool.network;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.transition.Explode;
 import androidx.transition.TransitionManager;
@@ -49,6 +51,7 @@ public class GetFilesFeed extends AsyncTask<Void, Void, Void> {
                             jsonArray.getJSONObject(i).getString("des"),
                             jsonArray.getJSONObject(i).getString("extension"),
                             jsonArray.getJSONObject(i).getString("link"),
+                            jsonArray.getJSONObject(i).getString("backup_link"),
                             jsonArray.getJSONObject(i).getString("file_name"),
                             jsonArray.getJSONObject(i).getString("game_version"),
                             jsonArray.getJSONObject(i).getString("type")
@@ -66,8 +69,8 @@ public class GetFilesFeed extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
-        ((Activity)context).runOnUiThread(new Runnable() {
-            @Override
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 if(filesFeedModalArrayList != null){
                     feedAdapter = new FeedAdapter(context, filesFeedModalArrayList);
@@ -79,7 +82,7 @@ public class GetFilesFeed extends AsyncTask<Void, Void, Void> {
                     SecondaryGFX.binding.shimmerGfxFiles.setVisibility(View.INVISIBLE);
                     SecondaryGFX.binding.recyclerViewFeed.setVisibility(View.VISIBLE);
                 }else{
-                    //new BottomSheetDialog(context).NoInternetBottomSheet(((Activity)context).getWindow().getDecorView());
+                    Toast.makeText(context, "Something Went Wrong!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

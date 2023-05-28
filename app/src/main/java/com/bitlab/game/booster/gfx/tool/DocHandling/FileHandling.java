@@ -3,18 +3,19 @@ package com.bitlab.game.booster.gfx.tool.DocHandling;
 import static android.content.Context.MODE_PRIVATE;
 import static android.os.Build.VERSION.SDK_INT;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.documentfile.provider.DocumentFile;
 
 import com.bitlab.game.booster.gfx.tool.Constants;
-import com.bitlab.game.booster.gfx.tool.adapters.FeedAdapter;
+import com.bitlab.game.booster.gfx.tool.databinding.GfxFilesListBinding;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -373,7 +374,7 @@ public class FileHandling {
 
     }
 
-    public void CopyFilesFromFolder(String FileNameInFolder, FeedAdapter.FeedViewHolder holder){
+    public void CopyFilesFromFolder(String FileNameInFolder, GfxFilesListBinding binding, boolean isBackup){
         DeleteFile();
 
         DeleteFile();
@@ -387,7 +388,11 @@ public class FileHandling {
             }else{
                 out = new FileOutputStream(fileLocation + "/" + FileName);
             }
-            in = new FileInputStream(Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/files/system/" + FileNameInFolder);
+
+            if(isBackup)
+                in = new FileInputStream(Constants.DOWNLOAD_PATH + Constants.BACKUP_PATH + FileNameInFolder);
+            else
+                in = new FileInputStream(Constants.DOWNLOAD_PATH + Constants.SERVICE_FILES_PATH + FileNameInFolder);
 
             byte[] buffer = new byte[1024];
             int read;
@@ -398,20 +403,19 @@ public class FileHandling {
             out.flush();
             out.close();
 
-            ((Activity) context).runOnUiThread(new Runnable() {
-                @Override
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
                 public void run() {
-                    //FeedAdapter.AfterFileApplied(holder);
+                    //FeedAdapter.AfterFileApplied(context, binding);
                 }
             });
+
 
         }catch (Exception e){
 
         }
-
     }
 
-    public void CopyFilesFromFolder_InPuffer(String FileNameInFolder, FeedAdapter.FeedViewHolder holder){
+    public void CopyFilesFromFolder_InPuffer(String FileNameInFolder, GfxFilesListBinding binding, boolean isBackup){
 
         if(SDK_INT >= 29){
             documentFile = documentFile.findFile("puffer_temp");
@@ -437,12 +441,11 @@ public class FileHandling {
                         return;
                 }
 
-                isFileExists  = new File(Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/files/system/" + FileNameInFolder).exists();
+                if(isBackup)
+                    in = new FileInputStream(Constants.DOWNLOAD_PATH + Constants.BACKUP_PATH + FileNameInFolder);
+                else
+                    in = new FileInputStream(Constants.DOWNLOAD_PATH + Constants.SERVICE_FILES_PATH + FileNameInFolder);
 
-                if(isFileExists){
-                    in  = new FileInputStream(new File(Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/files/system/" + FileNameInFolder));
-                }else
-                    return;
 
                 byte[] buffer = new byte[1024];
                 int read;
@@ -453,12 +456,12 @@ public class FileHandling {
                 out.flush();
                 out.close();
 
-                ((Activity) context).runOnUiThread(new Runnable() {
-                    @Override
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     public void run() {
-                        //FeedAdapter.AfterFileApplied(holder);
+                       //FeedAdapter.AfterFileApplied(context, binding);
                     }
                 });
+
             } catch (IOException e) {
 
             }

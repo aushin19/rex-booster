@@ -22,4 +22,6 @@
     <color name="premium">#000</color>
 
     <color name="shimmer">#d6d8da</color>
+
+    <color name="draw_over_background">#505050</color>
 </resources>

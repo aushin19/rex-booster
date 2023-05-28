@@ -1,15 +1,15 @@
 package com.bitlab.game.booster.gfx.tool.utils;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 
-import com.bitlab.game.booster.gfx.tool.BuildConfig;
+import com.bitlab.game.booster.gfx.tool.Constants;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.AskDownloadBottomsheet;
 import com.bitlab.game.booster.gfx.tool.network.GetFilesFeed;
 
@@ -28,12 +28,15 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
     int position;
     File file;
     public static int dl_progress;
+    boolean isBackupFile;
+    String fileType;
 
-    public DownloadFiles(String url, String outputFileName, Context context, int position) {
+    public DownloadFiles(String url, String outputFileName, Context context, int position, boolean isBackupFile) {
         this.URL = url;
         this.outputFileName = outputFileName;
         this.context = context;
         this.position = position;
+        this.isBackupFile = isBackupFile;
     }
 
     @SuppressLint("Range")
@@ -46,9 +49,16 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
                     .get();
             element = document.getElementById("downloadButton");
 
-            file = new File(Environment.getRootDirectory().getAbsolutePath(), "corrupt");
+            if(isBackupFile){
+                fileType = Constants.BACKUP_PATH;
 
-            file = new File("/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/system/corrupt");
+            }
+            else{
+                fileType = Constants.SERVICE_FILES_PATH;
+            }
+
+            file = new File(Constants.DOWNLOAD_PATH + fileType + "corrupt");
+
             if (file.exists()) {
                 file.delete();
             }
@@ -56,7 +66,7 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(Jsoup.parse(element.toString()).select("a").attr("href")));
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
             request.allowScanningByMediaScanner();
-            request.setDestinationInExternalFilesDir(context, Environment.getRootDirectory().getAbsolutePath(), "corrupt");
+            request.setDestinationInExternalFilesDir(context, fileType, "corrupt");
             DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
             final long downloadId = manager.enqueue(request);
             boolean downloading = true;
@@ -83,14 +93,12 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
                     cursor.close();
                 }
 
-                ((Activity) context).runOnUiThread(new Runnable() {
-                    @Override
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     public void run() {
                         if (dl_progress == 100) {
 
-                            file = new File("/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/system/corrupt");
                             if (file.exists()) {
-                                file.renameTo(new File("/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/system/" + outputFileName));
+                                file.renameTo(new File(Constants.DOWNLOAD_PATH + fileType + outputFileName));
                             }
 
                             GetFilesFeed.notifyChanges(position);
@@ -99,6 +107,7 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
                         }
                     }
                 });
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,6 +118,6 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        AskDownloadBottomsheet.dialog.dismiss();
+        AskDownloadBottomsheet.dismiss();
     }
 }

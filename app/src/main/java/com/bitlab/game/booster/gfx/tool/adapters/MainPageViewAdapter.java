@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.bitlab.game.booster.gfx.tool.views.fragment.Dashboard;
 import com.bitlab.game.booster.gfx.tool.views.fragment.PrimaryGFX;
 import com.bitlab.game.booster.gfx.tool.views.fragment.SecondaryGFX;
-import com.bitlab.game.booster.gfx.tool.views.fragment.Stats;
 
 public class MainPageViewAdapter extends FragmentStatePagerAdapter {
     public MainPageViewAdapter(FragmentManager fm) {
@@ -25,14 +24,14 @@ public class MainPageViewAdapter extends FragmentStatePagerAdapter {
                 return new PrimaryGFX();
             case 2:
                 return new SecondaryGFX();
-           case 3:
-                return new Stats();
+           /*case 3:
+                return new Stats();*/
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 }

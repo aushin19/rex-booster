@@ -3,6 +3,7 @@ package com.bitlab.game.booster.gfx.tool.adapters;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,14 @@ public class BoosterAppsAdapter extends RecyclerView.Adapter<BoosterAppsAdapter.
         } catch (PackageManager.NameNotFoundException e) {
 
         }
+
+        binding.parentMaterialCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String packageName = appInfo.packageName;
+                context.startActivity(context.getPackageManager().getLaunchIntentForPackage(packageName));
+            }
+        });
 
     }
 

@@ -3,13 +3,17 @@ package com.bitlab.game.booster.gfx.tool.views.fragment;
 import static android.content.Context.MODE_PRIVATE;
 import static android.os.Build.VERSION.SDK_INT;
 
-import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +28,8 @@ import com.bitlab.game.booster.gfx.tool.adapters.FeedAdapter;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.ClearDataBottomsheet;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.SelectVersionBottomsheet;
 import com.bitlab.game.booster.gfx.tool.databinding.FragmentSecondaryGfxBinding;
+import com.bitlab.game.booster.gfx.tool.drawoverapps.Control;
+import com.bitlab.game.booster.gfx.tool.drawoverapps.DrawForegroundService;
 import com.bitlab.game.booster.gfx.tool.model.SelectedFilesModal;
 import com.bitlab.game.booster.gfx.tool.network.GetFilesFeed;
 import com.bitlab.game.booster.gfx.tool.utils.WaitingDialog;
@@ -38,7 +44,7 @@ public class SecondaryGFX extends Fragment {
     public static FeedAdapter feedAdapter;
     SharedPreferences sharedPreferences;
     WaitingDialog waitingDialog;
-    int holderPos;
+    public static ArrayList<SelectedFilesModal> selectedFilesArrayList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,65 +115,72 @@ public class SecondaryGFX extends Fragment {
     }
 
     private void applyFiles() {
-        if (!Constants.GAME_PACKAGE_NAME.equals("none")) {
-            if (!PrimaryGFX.binding.primaryApplyButton.getText().equals("CLEAR DATA")) {
-                if (binding.secondaryApplyButton.getText().equals("APPLY SETTINGS")) {
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            waitingDialog.show();
-                        }
-                    });
-                    ArrayList<SelectedFilesModal> selectedFilesArrayList = FeedAdapter.selectedFilesModalArrayList;
-                    if (!selectedFilesArrayList.isEmpty()) {
+        if(!Settings.canDrawOverlays(context)){
+            ControllerActivity.getDrawOverPermission();
+        }else{
+            if (!Constants.GAME_PACKAGE_NAME.equals("none")) {
+                if (!PrimaryGFX.binding.primaryApplyButton.getText().equals("CLEAR DATA")) {
+                    if (binding.secondaryApplyButton.getText().equals("APPLY SETTINGS")) {
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int i = 0; i < selectedFilesArrayList.size(); i++) {
-                                    holderPos = i;
-                                    new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(holderPos).Holder);
+                        selectedFilesArrayList = FeedAdapter.selectedFilesModalArrayList;
 
-                                    new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder_InPuffer(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(holderPos).Holder);
+                        if (!selectedFilesArrayList.isEmpty()) {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                public void run() {
+                                    waitingDialog.show();
                                 }
-
-                                if (SDK_INT < 33) {
-                                    FileHandling.RenameFolderPrimary(context);
-                                }
-
-                                FeedAdapter.selectedFilesModalArrayList.clear();
-                                selectedFilesArrayList.clear();
-                                ((Activity) context).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        waitingDialog.dismiss();
-                                        if (SDK_INT < 33) {
-                                            binding.secondaryApplyButton.setText("CLEARING DATA");
-                                            new ClearDataBottomsheet(context).Show(context);
-                                        } else {
-                                            binding.secondaryApplyButton.setText("LAUNCH GAME");
-                                            binding.secondaryApplyButton.setTextColor(context.getColor(R.color.primary));
+                            });
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    for (int i = 0; i < selectedFilesArrayList.size(); i++) {
+                                        if(selectedFilesArrayList.get(i).isBackup){
+                                            if(!isMyServiceRunning(DrawForegroundService.class))
+                                                Control.start(context);
                                         }
+                                        new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(i).binding, true);
+                                        new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder_InPuffer(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(i).binding, true);
                                     }
-                                });
-                            }
-                        }).start();
 
-                    } else {
-                        waitingDialog.dismiss();
-                        //Alerter.create((Activity) context).setText("No Files has Selected to Apply").setBackgroundColorRes(R.color.ready).setIcon(R.drawable.ic_warn).show();
+                                    if (SDK_INT < 33) {
+                                        FileHandling.RenameFolderPrimary(context);
+                                    }
+
+                                    if(!isMyServiceRunning(DrawForegroundService.class)){
+                                        FeedAdapter.selectedFilesModalArrayList.clear();
+                                        selectedFilesArrayList.clear();
+                                    }
+
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        public void run() {
+                                            waitingDialog.dismiss();
+                                            if (SDK_INT < 33) {
+                                                binding.secondaryApplyButton.setText("CLEARING DATA");
+                                                new ClearDataBottomsheet(context).Show(context);
+                                            } else {
+                                                binding.secondaryApplyButton.setText("LAUNCH GAME");
+                                                binding.secondaryApplyButton.setTextColor(context.getColor(R.color.primary));
+                                            }
+                                        }
+                                    });
+                                }
+                            }).start();
+
+                        } else {
+                            Toast.makeText(context, "No Files has Selected to Apply", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else if (binding.secondaryApplyButton.getText().equals("LAUNCH GAME")) {
+                        String packageName = Constants.GAME_PACKAGE_NAME;
+                        startActivity(context.getPackageManager().getLaunchIntentForPackage(packageName));
                     }
 
-                } else if (binding.secondaryApplyButton.getText().equals("LAUNCH GAME")) {
-                    String packageName = Constants.GAME_PACKAGE_NAME;
-                    startActivity(context.getPackageManager().getLaunchIntentForPackage(packageName));
+                } else {
+                    Toast.makeText(context, "Apply Normal Settings First, Properly!", Toast.LENGTH_SHORT).show();
                 }
-
             } else {
-                //Alerter.create((Activity) context).setText("Apply Advanced Settings First, Properly!").setBackgroundColorRes(R.color.ready).setIcon(R.drawable.ic_warn).show();
+                SelectVersionBottomsheet.Show(context);
             }
-        } else {
-            SelectVersionBottomsheet.Show(context);
         }
     }
 
@@ -185,6 +198,16 @@ public class SecondaryGFX extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

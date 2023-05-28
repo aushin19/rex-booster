@@ -13,7 +13,7 @@
         android:title="Files"
         android:icon="@drawable/ic_fire"/>
 
-    <item android:id="@+id/stats"
+    <!--<item android:id="@+id/stats"
         android:title="Stats"
-        android:icon="@drawable/ic_fire"/>
+        android:icon="@drawable/ic_fire"/>-->
 </menu>

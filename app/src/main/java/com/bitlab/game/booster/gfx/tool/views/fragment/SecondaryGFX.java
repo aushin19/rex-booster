@@ -41,7 +41,6 @@ public class SecondaryGFX extends Fragment {
 
     Context context;
     public static FragmentSecondaryGfxBinding binding;
-    public static FeedAdapter feedAdapter;
     SharedPreferences sharedPreferences;
     WaitingDialog waitingDialog;
     public static ArrayList<SelectedFilesModal> selectedFilesArrayList = new ArrayList<>();
@@ -138,8 +137,8 @@ public class SecondaryGFX extends Fragment {
                                             if(!isMyServiceRunning(DrawForegroundService.class))
                                                 Control.start(context);
                                         }
-                                        new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(i).binding, true);
-                                        new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder_InPuffer(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(i).binding, true);
+                                        new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(i).binding, selectedFilesArrayList.get(i).isBackup);
+                                        new FileHandling(context, selectedFilesArrayList.get(i).FileName).CopyFilesFromFolder_InPuffer(selectedFilesArrayList.get(i).Title, selectedFilesArrayList.get(i).binding, selectedFilesArrayList.get(i).isBackup);
                                     }
 
                                     if (SDK_INT < 33) {

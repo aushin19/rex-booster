@@ -7,4 +7,8 @@ public class Control {
     public static void start(Context context) {
         context.startForegroundService(new Intent(context, DrawForegroundService.class));
     }
+
+     public static void stop(Context context) {
+        context.stopService(new Intent(context, DrawForegroundService.class));
+    }
 }

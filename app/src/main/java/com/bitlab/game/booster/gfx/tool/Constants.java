@@ -21,4 +21,7 @@ public class Constants {
     public final static String DOWNLOAD_PATH = "/storage/emulated/0/Android/data/" + BuildConfig.APPLICATION_ID + "/files/";
     public final static String BACKUP_PATH = "Backup/";
     public final static String SERVICE_FILES_PATH = "Files/";
+
+    public final static String STARTFOREGROUND_ACTION = "start";
+    public final static String STOPFOREGROUND_ACTION = "stop";
 }

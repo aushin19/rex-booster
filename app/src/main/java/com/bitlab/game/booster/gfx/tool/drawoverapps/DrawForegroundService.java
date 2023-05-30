@@ -27,15 +27,11 @@ public class DrawForegroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        // create the custom or default notification
-        // based on the android version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startMyOwnForeground();
         else
             startForeground(1, new Notification());
 
-        // create an instance of Window class
-        // and display the content on screen
         Window window = new Window(this);
         window.open();
     }
@@ -45,9 +41,14 @@ public class DrawForegroundService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    // for android version >=O we need to create
-    // custom notification stating
-    // foreground service is running
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Stop the foreground service
+        stopForeground(true);
+        stopSelf();
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private void startMyOwnForeground()
     {
@@ -73,4 +74,5 @@ public class DrawForegroundService extends Service {
                 .build();
         startForeground(2, notification);
     }
+
 }

@@ -65,7 +65,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-        FilesFeedModal filesFeedModal = filesFeedModalArrayList.get(holder.getAdapterPosition());
+        FilesFeedModal filesFeedModal = filesFeedModalArrayList.get(position);
         binding.fileTitle.setText(filesFeedModal.title);
         binding.fileDescription.setText(filesFeedModal.description);
         binding.fileExtension.setText(("." + filesFeedModal.extension).toUpperCase());

@@ -1,5 +1,6 @@
 package com.bitlab.game.booster.gfx.tool.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -28,8 +29,8 @@ import java.util.ArrayList;
 public class GetFilesFeed extends AsyncTask<Void, Void, Void> {
     Context context;
     ArrayList<FilesFeedModal> filesFeedModalArrayList = new ArrayList<>();
+    static FeedAdapter fileFeedAdapter;
     String content;
-    static FeedAdapter feedAdapter;
 
     public GetFilesFeed(Context context) {
         this.context = context;
@@ -58,25 +59,24 @@ public class GetFilesFeed extends AsyncTask<Void, Void, Void> {
                     ));
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+
             }
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(Void unused) {
-        super.onPostExecute(unused);
-
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 if(filesFeedModalArrayList != null){
-                    feedAdapter = new FeedAdapter(context, filesFeedModalArrayList);
-                    SecondaryGFX.feedAdapter = feedAdapter;
+                    fileFeedAdapter = new FeedAdapter(context, filesFeedModalArrayList);
+                    fileFeedAdapter.setHasStableIds(false);
+
                     SecondaryGFX.binding.recyclerViewFeed.setItemViewCacheSize(filesFeedModalArrayList.size());
-                    SecondaryGFX.binding.recyclerViewFeed.setAdapter(SecondaryGFX.feedAdapter);
+                    SecondaryGFX.binding.recyclerViewFeed.setAdapter(fileFeedAdapter);
 
                     TransitionManager.beginDelayedTransition(SecondaryGFX.binding.mainLayout, new Explode());
                     SecondaryGFX.binding.shimmerGfxFiles.setVisibility(View.INVISIBLE);
@@ -88,8 +88,9 @@ public class GetFilesFeed extends AsyncTask<Void, Void, Void> {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public static void notifyChanges(int position){
-        feedAdapter.notifyItemChanged(position);
+        //fileFeedAdapter.notifyDataSetChanged();
     }
 
 }

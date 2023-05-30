@@ -115,6 +115,7 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
         return null;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);

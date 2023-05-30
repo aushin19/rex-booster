@@ -1,7 +1,6 @@
 package com.bitlab.game.booster.gfx.tool.bottomsheets;
 
 import android.content.Context;
-import android.transition.Explode;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import com.bitlab.game.booster.gfx.tool.databinding.BottomsheetAskDownloadBindin
 import com.bitlab.game.booster.gfx.tool.model.FilesFeedModal;
 import com.bitlab.game.booster.gfx.tool.utils.DownloadFiles;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.transition.platform.MaterialSharedAxis;
 
 public class AskDownloadBottomsheet {
     public static BottomSheetDialog dialog;
@@ -37,7 +37,8 @@ public class AskDownloadBottomsheet {
         binding.downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TransitionManager.beginDelayedTransition(binding.mainLayout, new Explode());
+                //TransitionManager.beginDelayedTransition(binding.mainLayout, new Explode());
+                TransitionManager.beginDelayedTransition(binding.mainLayout, new MaterialSharedAxis(MaterialSharedAxis.Y, true));
 
                 binding.subText.setVisibility(View.INVISIBLE);
                 binding.downloadButton.setVisibility(View.INVISIBLE);

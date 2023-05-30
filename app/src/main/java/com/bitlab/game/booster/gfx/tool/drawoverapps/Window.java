@@ -135,6 +135,7 @@ public class Window implements View.OnTouchListener {
             ((WindowManager)context.getSystemService(WINDOW_SERVICE)).removeView(mView);
             mView.invalidate();
             ((ViewGroup)mView.getParent()).removeAllViews();
+            Control.stop(context);
         } catch (Exception e) {
             Log.d("Error2",e.toString());
         }
@@ -165,4 +166,5 @@ public class Window implements View.OnTouchListener {
         }
         return true;
     }
+
 }

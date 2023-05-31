@@ -20,11 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bitlab.game.booster.gfx.tool.AppConfig;
 import com.bitlab.game.booster.gfx.tool.Constants;
 import com.bitlab.game.booster.gfx.tool.DocHandling.FileHandling;
-import com.bitlab.game.booster.gfx.tool.DocHandling.PermissionHandling;
 import com.bitlab.game.booster.gfx.tool.R;
 import com.bitlab.game.booster.gfx.tool.adapters.FeedAdapter;
+import com.bitlab.game.booster.gfx.tool.ads.InterstitialAds;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.ClearDataBottomsheet;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.SelectVersionBottomsheet;
 import com.bitlab.game.booster.gfx.tool.databinding.FragmentSecondaryGfxBinding;
@@ -44,6 +45,7 @@ public class SecondaryGFX extends Fragment {
     SharedPreferences sharedPreferences;
     WaitingDialog waitingDialog;
     public static ArrayList<SelectedFilesModal> selectedFilesArrayList = new ArrayList<>();
+    InterstitialAds interstitialAds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,12 @@ public class SecondaryGFX extends Fragment {
     private void init(){
         context = getContext();
 
+        interstitialAds = new InterstitialAds(context);
+
+        if(!AppConfig.isUserPaid){
+            interstitialAds.loadAd();
+        }
+
         waitingDialog = new WaitingDialog(context);
         sharedPreferences = context.getSharedPreferences("MySharedPref", MODE_PRIVATE);
     }
@@ -90,21 +98,19 @@ public class SecondaryGFX extends Fragment {
         binding.secondaryApplyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                interstitialAds.showAd();
+                if(!AppConfig.isUserPaid){
+                    interstitialAds.loadAd();
+                }
                 if (!Constants.GAME_PACKAGE_NAME.equals("none")) {
-                    if (SDK_INT >= 29) {
-                        if (!sharedPreferences.getString(Constants.DATA_PERMISSION, "").equals("")) {
-                            if (!sharedPreferences.getString(Constants.OBB_PERMISSION, "").equals("")) {
-                                applyFiles();
-                            } else {
-                                ControllerActivity.askPermissionOBB();
-                            }
+                    if (!sharedPreferences.getString(Constants.DATA_PERMISSION, "").equals("")) {
+                        if (!sharedPreferences.getString(Constants.OBB_PERMISSION, "").equals("")) {
+                            applyFiles();
                         } else {
-                            ControllerActivity.askPermission();
+                            ControllerActivity.askPermissionOBB();
                         }
                     } else {
-                        if (PermissionHandling.checkAndRequestPermissions(context)) {
-                            applyFiles();
-                        }
+                        ControllerActivity.askPermission();
                     }
                 } else {
                     SelectVersionBottomsheet.Show(context);
@@ -152,6 +158,7 @@ public class SecondaryGFX extends Fragment {
 
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         public void run() {
+                                            interstitialAds.showAd();
                                             waitingDialog.dismiss();
                                             if (SDK_INT < 33) {
                                                 binding.secondaryApplyButton.setText("CLEARING DATA");

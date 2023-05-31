@@ -54,8 +54,12 @@ public class BoosterAppsAdapter extends RecyclerView.Adapter<BoosterAppsAdapter.
         binding.parentMaterialCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String packageName = appInfo.packageName;
-                context.startActivity(context.getPackageManager().getLaunchIntentForPackage(packageName));
+                try{
+                    String packageName = appInfo.packageName;
+                    context.startActivity(context.getPackageManager().getLaunchIntentForPackage(packageName));
+                }catch(Exception e){
+
+                }
             }
         });
 

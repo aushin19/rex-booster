@@ -3,6 +3,7 @@ package com.bitlab.game.booster.gfx.tool.billing;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,7 +69,6 @@ public class IAPBilling implements PurchasesUpdatedListener, BillingClientStateL
     //step-5
     @Override
     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
-
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null) {
             for (Purchase purchase : list) {
                 handlePurchase(purchase);
@@ -197,6 +197,8 @@ public class IAPBilling implements PurchasesUpdatedListener, BillingClientStateL
 
     void handlePurchase(Purchase purchase) {
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+            Toast.makeText(refActivity, "Restart app to see changes", Toast.LENGTH_LONG).show();
+
             AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
             billingClient.acknowledgePurchase(acknowledgePurchaseParams, new AcknowledgePurchaseResponseListener() {
                 @Override

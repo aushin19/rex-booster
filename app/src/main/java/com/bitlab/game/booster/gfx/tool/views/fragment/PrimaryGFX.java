@@ -18,11 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bitlab.game.booster.gfx.tool.AppConfig;
 import com.bitlab.game.booster.gfx.tool.Constants;
 import com.bitlab.game.booster.gfx.tool.DocHandling.FileHandling;
-import com.bitlab.game.booster.gfx.tool.DocHandling.PermissionHandling;
 import com.bitlab.game.booster.gfx.tool.R;
 import com.bitlab.game.booster.gfx.tool.adapters.SpinnerArray;
+import com.bitlab.game.booster.gfx.tool.ads.InterstitialAds;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.ClearDataBottomsheet;
 import com.bitlab.game.booster.gfx.tool.bottomsheets.SelectVersionBottomsheet;
 import com.bitlab.game.booster.gfx.tool.databinding.FragmentPrimaryGfxBinding;
@@ -40,6 +41,7 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
     int resolution_int, fps_int, graphics_int, styles_int, sound_int, water_int, shadow_int, detail_int;
     ArrayList<Integer> spinnerItemList = new ArrayList<>();
     WaitingDialog waitingDialog;
+    InterstitialAds interstitialAds;
 
     public PrimaryGFX() {
 
@@ -66,6 +68,12 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
 
     private void init(){
         context = getContext();
+
+        interstitialAds = new InterstitialAds(context);
+
+        if(!AppConfig.isUserPaid){
+            interstitialAds.loadAd();
+        }
 
         waitingDialog = new WaitingDialog(context);
         sharedPreferences = context.getSharedPreferences("MySharedPref", MODE_PRIVATE);
@@ -170,21 +178,19 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
+                interstitialAds.showAd();
+                if(!AppConfig.isUserPaid){
+                    interstitialAds.loadAd();
+                }
                 if (!Constants.GAME_PACKAGE_NAME.equals("none")) {
-                    if (SDK_INT >= 29) {
-                        if (!sharedPreferences.getString(Constants.DATA_PERMISSION, "").equals("")) {
-                            if (!sharedPreferences.getString(Constants.OBB_PERMISSION, "").equals("")) {
-                                applyFiles();
-                            } else {
-                                ControllerActivity.askPermissionOBB();
-                            }
+                    if (!sharedPreferences.getString(Constants.DATA_PERMISSION, "").equals("")) {
+                        if (!sharedPreferences.getString(Constants.OBB_PERMISSION, "").equals("")) {
+                            applyFiles();
                         } else {
-                            ControllerActivity.askPermission();
+                            ControllerActivity.askPermissionOBB();
                         }
                     } else {
-                        if (PermissionHandling.checkAndRequestPermissions(context)) {
-                            applyFiles();
-                        }
+                        ControllerActivity.askPermission();
                     }
                 } else {
                     SelectVersionBottomsheet.Show(context);
@@ -197,7 +203,6 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
     private void applyFiles() {
         if (!SecondaryGFX.binding.secondaryApplyButton.getText().equals("CLEAR DATA")) {
             if (binding.primaryApplyButton.getText().equals("APPLY SETTINGS")) {
-
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     public void run() {
                         waitingDialog.show();
@@ -219,6 +224,7 @@ public class PrimaryGFX extends Fragment implements AdapterView.OnItemSelectedLi
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             public void run() {
+                                interstitialAds.showAd();
                                 waitingDialog.dismiss();
                                 if (SDK_INT < 33) {
                                     binding.primaryApplyButton.setText("CLEARING DATA");

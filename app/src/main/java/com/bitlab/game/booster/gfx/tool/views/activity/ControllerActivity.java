@@ -66,9 +66,6 @@ public class ControllerActivity extends AppCompatActivity {
         activity = this;
         sharedPreferences = getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
 
-        if(AppConfig.isUserPaid)
-            binding.premium.setVisibility(View.GONE);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -193,30 +190,28 @@ public class ControllerActivity extends AppCompatActivity {
         StorageManager storageManager;
         if (PermissionHandling.isGranted(context)) {
             if (PermissionHandling.checkAndRequestPermissions(context)) {
-                if (SDK_INT >= 29) {
-                    storageManager = (StorageManager) context.getSystemService(STORAGE_SERVICE);
-                    Intent intent = null;
-                    String targetDirectory = null;
-                    if (SDK_INT >= 33) {
-                        intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
-                        targetDirectory = "Android%2Fdata%2F" + Constants.GAME_PACKAGE_NAME;
-                    } else if (SDK_INT >= 29) {
-                        intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
-                        targetDirectory = "Android%2Fdata";
-                    }
-
-                    Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
-                    String scheme = uri.toString();
-                    scheme = scheme.replace("/root/", "/document/");
-                    scheme += "%3A" + targetDirectory;
-                    uri = Uri.parse(scheme);
-
-                    intent.putExtra("android.provider.extra.INITIAL_URI", uri);
-                    ((Activity) context).startActivityForResult(intent, PermissionHandling.REQUEST_ACTION_OPEN_DOCUMENT_TREE_DATA);
+                storageManager = (StorageManager) context.getSystemService(STORAGE_SERVICE);
+                Intent intent = null;
+                String targetDirectory = null;
+                if (SDK_INT >= 33) {
+                    intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
+                    targetDirectory = "Android%2Fdata%2F" + Constants.GAME_PACKAGE_NAME;
+                } else {
+                    intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
+                    targetDirectory = "Android%2Fdata";
                 }
+
+                Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
+                String scheme = uri.toString();
+                scheme = scheme.replace("/root/", "/document/");
+                scheme += "%3A" + targetDirectory;
+                uri = Uri.parse(scheme);
+
+                intent.putExtra("android.provider.extra.INITIAL_URI", uri);
+                ((Activity) context).startActivityForResult(intent, PermissionHandling.REQUEST_ACTION_OPEN_DOCUMENT_TREE_DATA);
             }
         } else if (PermissionHandling.isGrantedOBB(context)) {
-            if (SDK_INT >= 29) askPermissionOBB();
+            askPermissionOBB();
         }
     }
 
@@ -228,7 +223,7 @@ public class ControllerActivity extends AppCompatActivity {
         if (SDK_INT >= 33) {
             intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
             targetDirectory = "Android%2Fobb%2F" + Constants.GAME_PACKAGE_NAME;
-        } else if (SDK_INT >= 29) {
+        } else {
             intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
             targetDirectory = "Android%2Fobb";
         }
@@ -255,7 +250,7 @@ public class ControllerActivity extends AppCompatActivity {
 
             if (SDK_INT >= 33) {
                 dataPath = "content://com.android.externalstorage.documents/tree/primary%3AAndroid%2Fdata%2F" + Constants.GAME_PACKAGE_NAME;
-            } else if (SDK_INT >= 29) {
+            } else {
                 dataPath = "content://com.android.externalstorage.documents/tree/primary%3AAndroid%2Fdata";
             }
 
@@ -283,7 +278,7 @@ public class ControllerActivity extends AppCompatActivity {
 
             if (SDK_INT >= 33) {
                 dataPath = "content://com.android.externalstorage.documents/tree/primary%3AAndroid%2Fobb%2F" + Constants.GAME_PACKAGE_NAME;
-            } else if (SDK_INT >= 29) {
+            } else {
                 dataPath = "content://com.android.externalstorage.documents/tree/primary%3AAndroid%2Fobb";
             }
 

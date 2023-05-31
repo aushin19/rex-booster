@@ -32,6 +32,7 @@
     </queries>
 
     <application
+        android:name=".ads.OpenAds.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -72,6 +73,10 @@
             android:name=".drawoverapps.DrawForegroundService"
             android:enabled="true"
             android:exported="true"/>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6993711142141794~7611042220" />
     </application>
 
 </manifest>

@@ -26,8 +26,7 @@ public class BoosterApps {
         String serializedObject = sharedPreferences.getString("booster_apps", null);
         if (serializedObject != null) {
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<AppInfo>>() {
-            }.getType();
+            Type type = new TypeToken<ArrayList<AppInfo>>() {}.getType();
 
             return gson.fromJson(serializedObject, type);
         }

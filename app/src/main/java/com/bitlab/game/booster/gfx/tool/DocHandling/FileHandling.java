@@ -2,12 +2,12 @@ package com.bitlab.game.booster.gfx.tool.DocHandling;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.os.Build.VERSION.SDK_INT;
+import static com.bitlab.game.booster.gfx.tool.Constants.GAME_PACKAGE_NAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -20,8 +20,6 @@ import com.bitlab.game.booster.gfx.tool.databinding.GfxFilesListBinding;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,10 +62,10 @@ public class FileHandling {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (SDK_INT >= 29) {
+        } else {
             documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.DATA_PERMISSION, "")));
             try {
-                documentFile = documentFile.findFile(Constants.GAME_PACKAGE_NAME)
+                documentFile = documentFile.findFile(GAME_PACKAGE_NAME)
                         .findFile("files")
                         .findFile("UE4Game")
                         .findFile("ShadowTrackerExtra")
@@ -88,21 +86,6 @@ public class FileHandling {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-
-            fileLocation = Environment.getExternalStorageDirectory() + "/Android/data/" + Constants.GAME_PACKAGE_NAME + "/files/UE4Game/ShadowTrackerExtra/ShadowTrackerExtra/Saved/";
-
-            switch (extension) {
-                case "sav":
-                    fileLocation = fileLocation + "SaveGames";
-                    break;
-                case "pak":
-                    fileLocation = fileLocation + "Paks";
-                    break;
-                case "ini":
-                    fileLocation = fileLocation + "Config/Android";
-                    break;
-            }
         }
     }
 
@@ -115,12 +98,8 @@ public class FileHandling {
 
         try {
 
-            if(SDK_INT >= 29){
-                documentFile = documentFile.createFile("text/" + extension, FileName);
-                out = context.getContentResolver().openOutputStream(documentFile.getUri());
-            }
-            else
-                out = new FileOutputStream(fileLocation  + "/" + FileName);
+            documentFile = documentFile.createFile("text/" + extension, FileName);
+            out = context.getContentResolver().openOutputStream(documentFile.getUri());
 
             in = assetManager.open("files/Render Quality/" + qualityName + "/" + FileName);
 
@@ -140,15 +119,8 @@ public class FileHandling {
 
     public void DeleteFile(){
         try {
-            if(SDK_INT >= 29){
-                if(documentFile.findFile(FileName).exists()){
-                    documentFile.findFile(FileName).delete();
-                }
-            }else{
-                File file = new File(fileLocation + "/" + FileName);
-                if(file.exists()){
-                    file.delete();
-                }
+            if(documentFile.findFile(FileName).exists()){
+                documentFile.findFile(FileName).delete();
             }
 
         } catch (Exception e) {
@@ -193,13 +165,7 @@ public class FileHandling {
 
         try {
 
-            if(SDK_INT >= 29){
-                in = context.getContentResolver().openInputStream(documentFile.findFile("UserCustom.ini").getUri());
-            }else{
-                File des = new File(fileLocation + "/UserCustom.ini");
-                Uri fileDes = Uri.fromFile(des);
-                in = context.getContentResolver().openInputStream(fileDes);
-            }
+            in = context.getContentResolver().openInputStream(documentFile.findFile("UserCustom.ini").getUri());
 
             InputStreamReader isr = new InputStreamReader(in);
             BufferedReader br = new BufferedReader(isr);
@@ -233,34 +199,18 @@ public class FileHandling {
 
         DeleteFile();
 
-        if(SDK_INT >= 29){
-            try {
+        try {
 
-                DocumentFile newFile = documentFile.createFile("text/" + extension, FileName);
-                out = context.getContentResolver().openOutputStream(newFile.getUri());
+            DocumentFile newFile = documentFile.createFile("text/" + extension, FileName);
+            out = context.getContentResolver().openOutputStream(newFile.getUri());
 
-                out.write(text.getBytes());
+            out.write(text.getBytes());
 
-                out.flush();
-                out.close();
+            out.flush();
+            out.close();
 
-            }catch (Exception e) {
+        }catch (Exception e) {
 
-            }
-        }else{
-            try {
-                File root = new File(fileLocation);
-                if (!root.exists()) {
-                    root.mkdirs();
-                }
-                File file = new File(root, "UserCustom.ini");
-                FileWriter writer = new FileWriter(file);
-                writer.append(text);
-                writer.flush();
-                writer.close();
-            } catch (IOException e) {
-
-            }
         }
 
     }
@@ -271,34 +221,18 @@ public class FileHandling {
 
         DeleteFile();
 
-        if(SDK_INT >= 29){
-            try {
+        try {
 
-                DocumentFile newFile = documentFile.createFile("text/" + extension, FileName);
-                out = context.getContentResolver().openOutputStream(newFile.getUri());
+            DocumentFile newFile = documentFile.createFile("text/" + extension, FileName);
+            out = context.getContentResolver().openOutputStream(newFile.getUri());
 
-                out.write(text.getBytes());
+            out.write(text.getBytes());
 
-                out.flush();
-                out.close();
+            out.flush();
+            out.close();
 
-            }catch (Exception e) {
+        }catch (Exception e) {
 
-            }
-        }else{
-            try {
-                File root = new File(fileLocation);
-                if (!root.exists()) {
-                    root.mkdirs();
-                }
-                File file = new File(root, "UserSettings.ini");
-                FileWriter writer = new FileWriter(file);
-                writer.append(text);
-                writer.flush();
-                writer.close();
-            } catch (IOException e) {
-
-            }
         }
 
     }
@@ -308,33 +242,19 @@ public class FileHandling {
         File file = new File("/storage/emulated/0/Android/data/" + GAME_PACKAGE_NAME);
         SharedPreferences sharedPreferences = context.getSharedPreferences("MySharedPref",MODE_PRIVATE);
 
-        if(SDK_INT >= 29){
-            try {
-                if(file.exists()){
-                    DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.DATA_PERMISSION,"")));
-                    documentFile.findFile(GAME_PACKAGE_NAME).renameTo(GAME_PACKAGE_NAME + "1");
-                }
-
-                file = new File("/storage/emulated/0/Android/obb/" + GAME_PACKAGE_NAME);
-                if(file.exists()){
-                    DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.OBB_PERMISSION,"")));
-                    documentFile.findFile(GAME_PACKAGE_NAME).renameTo(GAME_PACKAGE_NAME + "1");
-                }
-            } catch (Exception e) {
-
-            }
-        }else{
-
+        try {
             if(file.exists()){
-                file.renameTo(new File(file + "1"));
-                Log.d("Sunny", file.toString());
+                DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.DATA_PERMISSION,"")));
+                documentFile.findFile(GAME_PACKAGE_NAME).renameTo(GAME_PACKAGE_NAME + "1");
             }
 
             file = new File("/storage/emulated/0/Android/obb/" + GAME_PACKAGE_NAME);
             if(file.exists()){
-                file.renameTo(new File(file + "1"));
-                Log.d("Sunny", file.toString());
+                DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.OBB_PERMISSION,"")));
+                documentFile.findFile(GAME_PACKAGE_NAME).renameTo(GAME_PACKAGE_NAME + "1");
             }
+        } catch (Exception e) {
+            Log.d("shivam", e.getMessage());
         }
 
     }
@@ -345,31 +265,19 @@ public class FileHandling {
         File rename = new File("/storage/emulated/0/Android/data/" + GAME_PACKAGE_NAME);
         SharedPreferences sharedPreferences = context.getSharedPreferences("MySharedPref",MODE_PRIVATE);
 
-        if(SDK_INT >= 29){
-            try {
-                if(file.exists()){
-                    DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.DATA_PERMISSION,"")));
-                    documentFile.findFile(GAME_PACKAGE_NAME + "1").renameTo(GAME_PACKAGE_NAME);
-                }
-
-                file = new File("/storage/emulated/0/Android/obb/" + GAME_PACKAGE_NAME + "1");
-                if(file.exists()){
-                    DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.OBB_PERMISSION,"")));
-                    documentFile.findFile(GAME_PACKAGE_NAME + "1").renameTo(GAME_PACKAGE_NAME);
-                }
-            } catch (Exception e) {
-
-            }
-        }else{
+        try {
             if(file.exists()){
-                file.renameTo(new File(rename + ""));
+                DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.DATA_PERMISSION,"")));
+                documentFile.findFile(GAME_PACKAGE_NAME + "1").renameTo(GAME_PACKAGE_NAME);
             }
 
             file = new File("/storage/emulated/0/Android/obb/" + GAME_PACKAGE_NAME + "1");
-            rename = new File("/storage/emulated/0/Android/obb/" + GAME_PACKAGE_NAME);
             if(file.exists()){
-                file.renameTo(new File(rename + ""));
+                DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(sharedPreferences.getString(Constants.OBB_PERMISSION,"")));
+                documentFile.findFile(GAME_PACKAGE_NAME + "1").renameTo(GAME_PACKAGE_NAME);
             }
+        } catch (Exception e) {
+
         }
 
     }
@@ -382,12 +290,8 @@ public class FileHandling {
         InputStream in = null;
 
         try {
-            if (SDK_INT >= 29) {
-                documentFile = documentFile.createFile("text/" + extension, FileName);
-                out = context.getContentResolver().openOutputStream(documentFile.getUri());
-            }else{
-                out = new FileOutputStream(fileLocation + "/" + FileName);
-            }
+            documentFile = documentFile.createFile("text/" + extension, FileName);
+            out = context.getContentResolver().openOutputStream(documentFile.getUri());
 
             if(isBackup)
                 in = new FileInputStream(Constants.DOWNLOAD_PATH + Constants.BACKUP_PATH + FileNameInFolder);
@@ -430,16 +334,8 @@ public class FileHandling {
 
         if(extension.equals("pak")) {
             try {
-                if (SDK_INT >= 29) {
-                    documentFile = documentFile.createFile("text/" + extension, FileName);
-                    out = context.getContentResolver().openOutputStream(documentFile.getUri());
-                } else {
-                    isFileExists = new File(fileLocation + "/" + FileName).exists();
-                    if(isFileExists){
-                        out = new FileOutputStream(fileLocation + "/" + FileName);
-                    }else
-                        return;
-                }
+                documentFile = documentFile.createFile("text/" + extension, FileName);
+                out = context.getContentResolver().openOutputStream(documentFile.getUri());
 
                 if(isBackup)
                     in = new FileInputStream(Constants.DOWNLOAD_PATH + Constants.BACKUP_PATH + FileNameInFolder);
@@ -477,12 +373,8 @@ public class FileHandling {
         DeleteFile();
 
         try {
-            if(SDK_INT >= 29){
-                documentFile = documentFile.createFile("text/" + extension, FileName);
-                out = context.getContentResolver().openOutputStream(documentFile.getUri());
-            }
-            else
-                out = new FileOutputStream(fileLocation + "/" + FileName);
+            documentFile = documentFile.createFile("text/" + extension, FileName);
+            out = context.getContentResolver().openOutputStream(documentFile.getUri());
 
             AssetManager assetManager = context.getAssets();
 

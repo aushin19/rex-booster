@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'com.bitlab.game.booster.gfx.tool'
+    namespace 'com.onemosys.gfx.tool.game.booster'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.bitlab.game.booster.gfx.tool"
+        applicationId "com.onemosys.gfx.tool.game.booster"
         minSdk 29
-        targetSdk 31
-        versionCode 11
-        versionName "1.3"
+        targetSdk 32
+        versionCode 6
+        versionName "1.0a"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -81,7 +81,7 @@ dependencies {
     implementation 'com.google.android.play:core:1.10.3'
     implementation 'com.onesignal:OneSignal:4.8.5'
 
-    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
 

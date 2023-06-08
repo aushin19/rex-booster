@@ -86,8 +86,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:fontFamily="sans-serif"
                     android:text="Total RAM Size"
+                    android:fontFamily="sans-serif"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/cardView"
@@ -170,12 +170,13 @@
             android:layout_marginBottom="15dp"
             android:clickable="true"
             android:src="@drawable/ic_boost"
-            app:elevation="2dp"
-            app:maxImageSize="50dp"
+            android:visibility="gone"
             app:backgroundTint="@color/primary"
-            app:shapeAppearance="@style/fab_shape"
+            app:elevation="2dp"
             app:layout_constraintBottom_toTopOf="@+id/add_apps_FAB"
-            app:layout_constraintStart_toStartOf="@+id/add_apps_FAB"/>
+            app:layout_constraintStart_toStartOf="@+id/add_apps_FAB"
+            app:maxImageSize="50dp"
+            app:shapeAppearance="@style/fab_shape" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/boost_app_recyclerView"

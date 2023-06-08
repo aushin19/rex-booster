@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/primaryGFX"
-        android:name="com.bitlab.game.booster.gfx.tool.views.fragment.PrimaryGFX"
+        android:name="com.onemosys.gfx.tool.game.booster.views.fragment.PrimaryGFX"
         android:label="fragment_primary_gfx"
         tools:layout="@layout/fragment_primary_gfx" />
     <fragment
         android:id="@+id/secondaryGFX"
-        android:name="com.bitlab.game.booster.gfx.tool.views.fragment.SecondaryGFX"
+        android:name="com.onemosys.gfx.tool.game.booster.views.fragment.SecondaryGFX"
         android:label="fragment_secondary_gfx"
         tools:layout="@layout/fragment_secondary_gfx" />
     <fragment
         android:id="@+id/dashboard"
-        android:name="com.bitlab.game.booster.gfx.tool.views.fragment.Dashboard"
+        android:name="com.onemosys.gfx.tool.game.booster.views.fragment.Dashboard"
         android:label="fragment_home"
         tools:layout="@layout/fragment_dashboard" />
 </navigation>

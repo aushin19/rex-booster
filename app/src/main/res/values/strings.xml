@@ -9,6 +9,8 @@
     <string name="three_months_text_price">Total Price ₹00.00</string>
     <string name="one_year_text">1 Year</string>
     <string name="one_year_text_price">Total Price ₹00.00</string>
+    
+    <string name="add_prompt">Please click the 『 + 』 button on the right to add games.</string>
 
     <string name="download_prompt">In order to provide you with the best experience, our app needs to download a required file on your device.\nThis will allow us to improve the app\'s performance and functionality.\n\nWould you like to grant us permission to download this file?</string>
 </resources>

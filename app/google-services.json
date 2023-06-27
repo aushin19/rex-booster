@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "461833950031",
-    "project_id": "rex-booster-v2",
-    "storage_bucket": "rex-booster-v2.appspot.com"
+    "project_number": "341280558364",
+    "project_id": "boosterplus-4840f",
+    "storage_bucket": "boosterplus-4840f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:461833950031:android:b82f80dd6f567cc9fc2b3a",
+        "mobilesdk_app_id": "1:341280558364:android:5614bc30b4d835cc39fed9",
         "android_client_info": {
-          "package_name": "com.onemosys.gfx.tool.game.booster"
+          "package_name": "com.onesys.gfx.tool.game.booster"
         }
       },
       "oauth_client": [
         {
-          "client_id": "461833950031-pkm54gqqicblobhueombrn0a8a97cnhf.apps.googleusercontent.com",
+          "client_id": "341280558364-42cmrv1qjfhf3do8hbd4ithpelj1s5ij.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDpZGmEdAUxX4UDUE7gOMBBKzOjVVoPlfA"
+          "current_key": "AIzaSyCQ48Fy2us1mfxD53WlrZbhe-J_OJDsEC8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "461833950031-pkm54gqqicblobhueombrn0a8a97cnhf.apps.googleusercontent.com",
+              "client_id": "341280558364-42cmrv1qjfhf3do8hbd4ithpelj1s5ij.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

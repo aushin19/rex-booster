@@ -4,22 +4,22 @@ plugins {
 }
 
 android {
-    namespace 'com.onemosys.gfx.tool.game.booster'
+    namespace 'com.onesys.gfx.tool.game.booster'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.onemosys.gfx.tool.game.booster"
+        applicationId "com.onesys.gfx.tool.game.booster"
         minSdk 29
-        targetSdk 32
-        versionCode 6
-        versionName "1.0a"
+        targetSdk 33
+        versionCode 2
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField("boolean", "isUserPaid", "false")
-        buildConfigField("String", "FILES_API_KEY", "\"https://rex-gfx-tool.blogspot.com/2023/05/files-feed.html\"")
-        buildConfigField("String", "GAME_VERSION_API_KEY", "\"https://rex-gfx-tool.blogspot.com/2023/05/version.html\"")
+        buildConfigField("String", "FILES_API_KEY", "\"https://gotplusbooster.blogspot.com/2023/06/files-feed.html\"")
+        buildConfigField("String", "GAME_VERSION_API_KEY", "\"https://gotplusbooster.blogspot.com/2023/06/version.html\"")
     }
 
     buildTypes {
@@ -67,19 +67,11 @@ dependencies {
     //IAPBilling
     implementation "com.android.billingclient:billing:6.0.0"
 
-    //Navigation Graph
-    def nav_version = "2.5.3"
-    implementation "androidx.navigation:navigation-fragment:$nav_version"
-    implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
-    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
-    implementation "androidx.navigation:navigation-compose:$nav_version"
-
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.github.hyuwah:DraggableView:1.0.0'
 
     implementation 'com.google.android.play:core:1.10.3'
-    implementation 'com.onesignal:OneSignal:4.8.5'
+    implementation 'com.onesignal:OneSignal:4.8.6'
 
     implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-crashlytics'
